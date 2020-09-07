@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: okno-k8s-stateful
+  labels:
+    app: okno-k8s
+spec:
+  serviceName: okno-k8s-ss
+  replicas: 1
+  selector:
+    matchLabels:
+      app: okno-k8s
+  template:
+    metadata:
+      labels:
+        app: okno-k8s
+    spec:
+      containers:
+        - name: okno-app
+          image: nidaadocker/oknokloud:v1
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: "/build/data/files"
+              name: okno-data
+      volumes:
+        - hostPath:
+            path: "/home/docker/okno-files"
+          name: okno-data
